@@ -21,5 +21,9 @@ public class MemberService {
 	public List<Member> findAll() {
 		return memberRepository.findAll();
 	}
+	
+	public Optional<Member> findByEmailAndType(String email, String type) {
+		return memberRepository.findByEmailAndType(email, type);
+	}
 
 }

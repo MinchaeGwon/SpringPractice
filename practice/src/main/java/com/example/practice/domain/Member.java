@@ -22,7 +22,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="member", uniqueConstraints={@UniqueConstraint(columnNames={"email"})})
+@Table(name="member", uniqueConstraints={@UniqueConstraint(columnNames={"email", "type"})})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -42,14 +42,15 @@ public class Member implements UserDetails {
 	@Column(name = "auth")
     private String auth;
 	
-	@Column(name = "registrationToken")
-    private String registrationToken;
+	@Column(name = "type")
+	private String type;
 
 	 @Builder
-	 public Member(String email, String password, String auth) {
+	 public Member(String email, String password, String auth, String type) {
 		 this.email = email;
 		 this.password = password;
 		 this.auth = auth;
+		 this.type = type;
 	 }
 	
 	@Override

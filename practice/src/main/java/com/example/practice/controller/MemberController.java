@@ -32,7 +32,6 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-//@RequestMapping(value = "/member", produces = {MediaType.APPLICATION_JSON_VALUE})
 public class MemberController {
 
 	@Autowired
@@ -60,14 +59,6 @@ public class MemberController {
 		Map<String, Object> members = new HashMap<>();
 
 		members.put("result", memberService.findAll());
-		members.put("test", "????");
-
-//		for (int i = 1; i <= 5; i++) {
-//			Map<String, Object> member = new HashMap<>();
-//			member.put("idx", i);
-//			member.put("nickname", i + "민채");
-//			members.put(i, member);
-//		}
 
 		return members;
 	}
@@ -81,37 +72,9 @@ public class MemberController {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
-//    @PostMapping("/signin")
-//    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
-//        final Member member = userDetailService.authenticateByEmailAndPassword
-//                (authenticationRequest.getEmail(), authenticationRequest.getPassword());
-//        final String token = jwtTokenUtil.generateToken(member.getEmail());
-//        return ResponseEntity.ok(new JwtResponse(token));
-//    }
-
+	// 일반 로그인
 	@PostMapping(value = "/signin")
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
-//		String token;
-//		
-//		try {
-//			authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
-//
-//			final Member userDetails = (Member) userDetailService.authenticateByEmailAndPassword(
-//					authenticationRequest.getEmail(), authenticationRequest.getPassword());
-//
-//			token = jwtTokenUtil.generateToken(userDetails);
-//
-//			if (!authenticationRequest.getRegistrationToken().equals(userDetails.getRegistrationToken())) {
-//				userDetailService.modifyRegistrationToken(authenticationRequest.getRegistrationToken(), userDetails);
-//			}
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("일치하는 유저가 없습니다. 회원가입이 필요합니다.");
-//		}
-//
-//		return ResponseEntity.ok(new JwtResponse(token));
-		
+	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {		
 		String token;
 		
 		authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
@@ -148,6 +111,15 @@ public class MemberController {
 			response.setData(e.toString());
 		}
 		return response;
+	}
+	
+	// 카카오 로그인
+	
+	public ResponseEntity<?> kakaoRequest(@RequestBody JwtRequest authenticationRequest) throws Exception {
+		
+		
+		return null;
+		
 	}
 
 }
