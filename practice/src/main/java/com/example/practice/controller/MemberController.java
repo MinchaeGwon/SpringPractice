@@ -12,15 +12,17 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.practice.domain.Member;
-import com.example.practice.domain.MemberDto;
+import com.example.practice.dto.MemberDto;
+import com.example.practice.entity.Member;
+import com.example.practice.response.CommonResponse;
+import com.example.practice.response.ErrorResponse;
 import com.example.practice.response.Response;
 import com.example.practice.security.JwtRequest;
 import com.example.practice.security.JwtResponse;
@@ -74,13 +76,13 @@ public class MemberController {
 
 	// 일반 로그인
 	@PostMapping(value = "/signin")
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {		
+	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
 		String token;
-		
+
 		authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
 
-		final Member userDetails = (Member) userDetailService.authenticateByEmailAndPassword(
-				authenticationRequest.getEmail(), authenticationRequest.getPassword());
+		final Member userDetails = (Member) userDetailService
+				.authenticateByEmailAndPassword(authenticationRequest.getEmail(), authenticationRequest.getPassword());
 
 		token = jwtTokenUtil.generateToken(userDetails);
 
@@ -98,28 +100,30 @@ public class MemberController {
 	}
 
 	@PostMapping(value = "/signup")
-	public Response signup(@RequestBody MemberDto infoDto) { // 회원 추가
-		Response response = new Response();
-
+	public ResponseEntity<?> signup(@RequestBody MemberDto infoDto) { // 회원 추가
 		try {
 			userDetailService.save(infoDto);
-			response.setResponse("success");
-			response.setMessage("회원가입을 성공적으로 완료했습니다.");
+			return ResponseEntity.ok().body(new Response("회원가입을 성공적으로 완료했습니다."));
 		} catch (Exception e) {
-			response.setResponse("failed");
-			response.setMessage("회원가입을 하는 도중 오류가 발생했습니다.");
-			response.setData(e.toString());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(new ErrorResponse("회원가입을 하는 도중 오류가 발생했습니다.", "500"));
 		}
-		return response;
+
 	}
-	
+
+	// 로그인한 사용자의 정보 가져오기 -> 필요한 정보만 return 해야 함
+	@GetMapping(value = "/account/profile")
+	public ResponseEntity<?> getMyAccount(@AuthenticationPrincipal Member member) {
+		MemberDto.Profile dto = new MemberDto.Profile(member.getId(), member.getEmail());
+		return ResponseEntity.ok().body(new CommonResponse<MemberDto.Profile>(dto));
+	}
+
 	// 카카오 로그인
-	
+
 	public ResponseEntity<?> kakaoRequest(@RequestBody JwtRequest authenticationRequest) throws Exception {
-		
-		
+
 		return null;
-		
+
 	}
 
 }

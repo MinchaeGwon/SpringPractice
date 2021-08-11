@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.example.practice.domain.Member;
+import com.example.practice.entity.Member;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {

@@ -10,8 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.practice.domain.Member;
-import com.example.practice.domain.MemberDto;
+import com.example.practice.dto.MemberDto;
+import com.example.practice.entity.Member;
 import com.example.practice.repository.MemberRepository;
 
 @Service
